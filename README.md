@@ -22,24 +22,10 @@
 
 1. 机器人具备运动底盘、相机及RDK套件，硬件已经连接并测试完毕；
 2. 已有ROS底层驱动，机器人可接收“/cmd_vel”指令运动，并根据指令正确运动；
-3. PC电脑端已经完成Ubuntu、ROS Foxy/Humble的安装。
+3. 已安装Lidar驱动，能够正常发布/scan话题；
+4. PC电脑端已经完成Ubuntu、ROS Foxy/Humble的安装。
 
-## 机器人组装
-
-以下操作过程以OriginBot为例，满足条件的其他机器人使用方法类似。参考机器人官网的[使用指引](https://www.originbot.org/guide/quick_guide/)，完成机器人的硬件组装、镜像烧写及示例运行，确认机器人的基础功能可以顺利运行。
-
-## 安装功能包
-
-**1.参考[OriginBot说明](https://github.com/nodehubs/originbot_minimal/blob/develop/README.md)，完成Originbit基础功能安装**
-
-**2.安装hobot-nav2功能包**
-
-添加ros-foxy源
-```bash
-sudo apt update && sudo apt install curl -y
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-```
+## 安装hobot-nav2功能包
 
 启动机器人后，通过终端或者VNC连接机器人，点击[NodeHub hobot-nav2](http://it-dev.horizon.ai/nodehubDetail/170117036053371397)右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成人体跟随相关Node的安装。
 
@@ -50,15 +36,39 @@ sudo apt install -y tros-hobot-nav2
 
 ## 运行nav2
 
+这里以OriginBot为例，不同品类机器人前面三步执行命令可能有所差别
+
 **1.启动机器人底盘**
 
-启动机器人，如OriginBot的启动命令如下：
+启动机器人，通过终端或者VNC连接机器人，OriginBot的启动命令如下：
 
 ```bash
+# 设置tros的环境变量
+source /opt/tros/setup.bash
+
+# 设置ros的环境变量
+source /opt/ros/foxy/setup.bash
+
+# 启动OriginBot
 ros2 launch originbot_base robot.launch.py 
 ```
 
-**2.启动nav2**
+**2.启动激光雷达**
+
+通过终端或者VNC连接机器人，激光雷达启动命令如下：
+
+```bash
+# 设置tros的环境变量
+source /opt/tros/setup.bash
+
+# 设置ros的环境变量
+source /opt/ros/foxy/setup.bash
+
+# 运行激光雷达
+ros2 launch ydlidar_ros2_driver ydlidar_launch.py
+```
+
+**3.启动nav2**
 
 启动机器人后，通过终端或者VNC连接机器人，点击本页面右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成Node的安装：
 
@@ -73,7 +83,7 @@ source /opt/ros/foxy/setup.bash
 ros2 launch hobot_nav2 hobot_nav2_bringup.launch.py
 ```
 
-**3.可视化监控导航过程**
+**4.可视化监控导航过程**
 
 为了便于监控机器人导航的过程，在同一网络下的PC端，启动Rviz上位机可视化软件：
 
