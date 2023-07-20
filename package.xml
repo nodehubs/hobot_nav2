@@ -9,7 +9,6 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>tros-ros-config</depend>
   <depend>ros-foxy-navigation2</depend>
   <depend>ros-foxy-nav2-bringup</depend>
 
