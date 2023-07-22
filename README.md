@@ -27,7 +27,7 @@
 
 ## 安装hobot-nav2功能包
 
-启动机器人后，通过终端或者VNC连接机器人，点击[NodeHub hobot-nav2](http://it-dev.horizon.ai/nodehubDetail/170117036053371397)右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成人体跟随相关Node的安装。
+启动机器人后，通过终端或者VNC连接机器人，点击[NodeHub hobot-nav2](http://it-dev.horizon.ai/nodehubDetail/170117036053371397)右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成hobot-nav2功能包的安装。
 
 ```bash
 sudo apt update
