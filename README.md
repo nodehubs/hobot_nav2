@@ -1,122 +1,119 @@
-# 功能介绍
+English| [简体中文](./README_cn.md)
 
-以扫地机器人为例，如何完整清扫家里每一个地方？如何躲避地图中已知的墙壁、衣柜等障碍物？静态的还好说，如果有熊孩子或者宠物，还有地面不时出现的各种杂物，机器人又该如何一一躲避？这些问题就需要一套智能化的自主导航算法来解决。
+# Feature Introduction
 
-自主导航功能贯穿了移动机器人大部分的运动过程，也是智能移动机器人中至关重要的一项基础技能，机器人可以根据地图信息，有效规划出行走的路径，还要通过激光雷达或者摄像头实时识别周围的障碍物，一旦出现意外的障碍，需要立刻做出避障的动作。
+Taking the sweeping robot as an example, how to thoroughly clean every place in the house? How to avoid known obstacles such as walls, wardrobes, etc. on the map? It's easy to deal with static obstacles, but what if there are naughty kids or pets, as well as various debris that occasionally appear on the floor, how should the robot avoid them one by one? These issues require a set of intelligent autonomous navigation algorithms to solve.
 
+Autonomous navigation function runs through most of the movement process of mobile robots, and it is also a crucial basic skill in intelligent mobile robots. Robots can plan walking paths effectively based on map information, and they also need to recognize surrounding obstacles in real-time through lidar or cameras. Once unexpected obstacles appear, immediate avoidance actions need to be taken.
 
-# 物料清单
+# Bill of Materials
 
-以下机器人均已适配RDK X3
+The following robots are all compatible with RDK X3
 
-| 机器人名称          | 生产厂家 | 参考链接                                                     |
-| :------------------ | -------- | ------------------------------------------------------------ |
-| OriginBot智能机器人 | 古月居   | [点击跳转](https://www.originbot.org/)                       |
-| X3派机器人          | 轮趣科技 | [点击跳转](https://item.taobao.com/item.htm?spm=a230r.1.14.17.55e556912LPGGx&id=676436236906&ns=1&abbucket=12#detail) |
-| 履带智能车          | 微雪电子 | [点击跳转](https://detail.tmall.com/item.htm?abbucket=9&id=696078152772&rn=4d81bea40d392509d4a5153fb2c65a35&spm=a1z10.5-b-s.w4011-22714387486.159.12d33742lJtqRk) |
-| RDK X3 Robot        | 多厂家 | [点击跳转](https://developer.horizon.ai/sunrise) |
+| Robot Name             | Manufacturer | Reference Link                                               |
+| :--------------------- | ----------- | ------------------------------------------------------------ |
+| OriginBot Smart Robot   | Guyueju     | [Click Here](https://www.originbot.org/)                      |
+| X3 Sweeping Robot      | Lunqu Tech  | [Click Here](https://item.taobao.com/item.htm?spm=a230r.1.14.17.55e556912LPGGx&id=676436236906&ns=1&abbucket=12#detail) |
+| Tracked Smart Vehicle   | Weixue Electronics | [Click Here](https://detail.tmall.com/item.htm?abbucket=9&id=696078152772&rn=4d81bea40d392509d4a5153fb2c65a35&spm=a1z10.5-b-s.w4011-22714387486.159.12d33742lJtqRk) |
+| RDK X3 Robot           | Various Manufacturers | [Click Here](https://developer.horizon.ai/sunrise) |
 
-# 使用方式
+# Instructions for Use
 
-## 准备工作
+## Preparation
 
-1. 机器人具备运动底盘、相机及RDK套件，硬件已经连接并测试完毕；
-2. 已有ROS底层驱动，机器人可接收“/cmd_vel”指令运动，并根据指令正确运动；
-3. 已安装Lidar驱动，能够正常发布/scan话题；
-4. PC电脑端已经完成Ubuntu、ROS Foxy/Humble的安装。
+1. The robot has a mobile chassis, camera, and RDK kit. The hardware is already connected and tested.
+2. ROS low-level drivers are installed, and the robot can receive "/cmd_vel" commands to move correctly according to the command.
+3. Lidar driver is installed and able to publish /scan topics normally.
+4. PC computer has completed the installation of Ubuntu, ROS Foxy/Humble.
 
-## 安装hobot-nav2功能包
+## Install the hobot-nav2 package
 
-启动机器人后，通过终端或者VNC连接机器人，点击[NodeHub hobot-nav2](http://it-dev.horizon.ai/nodehubDetail/170117036053371397)右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成hobot-nav2功能包的安装。
+After starting the robot, connect to the robot via terminal or VNC, click the "One-click Deployment" button on [NodeHub hobot-nav2](http://it-dev.horizon.ai/nodehubDetail/170117036053371397) website, and copy the following command to run on the RDK system to install the hobot-nav2 package.
 
 ```bash
 sudo apt update
 sudo apt install -y tros-hobot-nav2
 ```
 
-## 运行nav2
+## Run nav2
 
-这里以OriginBot为例，不同品类机器人前面三步执行命令可能有所差别
+Taking OriginBot as an example here, the commands to execute in the first three steps may vary for robots of different categories.
 
-**1.启动机器人底盘**
+**1. Start the robot's chassis**
 
-启动机器人，通过终端或者VNC连接机器人，OriginBot的启动命令如下：
+Start the robot and connect to it via terminal or VNC. The startup command for OriginBot is as follows:
 
 ```bash
-# 设置tros的环境变量
+# Set the environment variables for tros
 source /opt/tros/setup.bash
 
-# 设置ros的环境变量
+# Set the environment variables for ROS
 source /opt/ros/foxy/setup.bash
-
-# 启动OriginBot
-ros2 launch originbot_base robot.launch.py 
+```# Launch OriginBot
+ros2 launch originbot_base robot.launch.py
 ```
 
-**2.启动激光雷达**
+**2. Start the LiDAR**
 
-通过终端或者VNC连接机器人，激光雷达启动命令如下：
+Connect to the robot via terminal or VNC, and the command to start the LiDAR is as follows:
 
 ```bash
-# 设置tros的环境变量
+# Set the environment variables for tros
 source /opt/tros/setup.bash
 
-# 设置ros的环境变量
+# Set the environment variables for ROS
 source /opt/ros/foxy/setup.bash
 
-# 运行激光雷达
+# Launch the LiDAR
 ros2 launch ydlidar_ros2_driver ydlidar_launch.py
 ```
 
-**3.启动nav2**
+**3. Launch nav2**
 
-启动机器人后，通过终端或者VNC连接机器人，点击本页面右上方的“一键部署”按钮，复制如下命令在RDK的系统上运行，完成Node的安装：
+After starting the robot, connect to the robot via terminal or VNC, click the "One-click Deployment" button at the top right of this page, copy and run the following command on the RDK system to install Nodes:
 
 ```bash
-# 设置tros的环境变量
+# Set the environment variables for tros
 source /opt/tros/setup.bash
 
-# 设置ros的环境变量
+# Set the environment variables for ROS
 source /opt/ros/foxy/setup.bash
 
-# 运行nav2
+# Launch nav2
 ros2 launch hobot_nav2 hobot_nav2_bringup.launch.py
 ```
 
-**4.可视化监控导航过程**
+**4. Visualize Navigation Process**
 
-为了便于监控机器人导航的过程，在同一网络下的PC端，启动Rviz上位机可视化软件：
+To monitor the robot's navigation process conveniently, start the Rviz visualization software on a PC in the same network:
 
 ```bash
-# 根据所使用的ROS版本修改此处的路径
+# Modify the path here according to the ROS version being used
 source /opt/ros/foxy/setup.bash
 
 ros2 launch nav2_bringup rviz_launch.py
 ```
 
-导航启动后，机器人最初不知道自己在哪里。默认情况下，Nav2会等待用户给机器人一个大致的起始位置。查看机器人在Gazebo中的位置，并在地图上找到该位置。通过点击Rviz2中的”2D Pose Estimate” 按钮，然后通过在地图上机器人预估的位置处点击来设置机器人初始位置 。可以通过向前拖动刚才单击的位置来设置机器人起始的移动方向。
+Once the navigation is launched, the robot initially doesn't know where it is. By default, Nav2 will wait for the user to provide an approximate starting location for the robot. Check the robot's position in Gazebo, find that location on the map, click the "2D Pose Estimate" button in Rviz2, then set the initial position of the robot by clicking at the estimated location on the map. Drag the location clicked forward to set the initial moving direction for the robot.
 
-> **注意：**
->
-> 启动导航后会在终端中看到不断输出的信息，这是因为没有设置机器人初始位姿的缘故，设置初始位置后，就会停止日志刷新。
+> **Note:**
+>After starting the navigation, continuous output information will be seen in the terminal because the initial pose of the robot has not been set. Once the initial position is set, the log refreshing will stop.
 
-
-
-点击目标位置选择“2D Goal Pose”按钮，在地图上选择导航目标点，即可开始自主导航。
+Click the "2D Goal Pose" button to select the target location, then you can start autonomous navigation on the map.
 
 ![e69be30fab](image/e69be30fab.gif)
 
 
-# 接口说明
+# Interface Description
 
-接口及参数调整方式可参考NAV2官方文档[NAV2调参说明](https://navigation.ros.org/setup_guides/index.html)
-
-
-# 参考资料
-
-- NAV2官方文档：[点击跳转](https://navigation.ros.org/index.html)
+For information on interfaces and parameter adjustments, please refer to the official NAV2 documentation [NAV2 Parameter Adjustment Guide](https://navigation.ros.org/setup_guides/index.html)
 
 
-# 常见问题
+# References
 
-暂无
+- NAV2 Official Documentation: [Click here to jump](https://navigation.ros.org/index.html)
+
+
+# Frequently Asked Questions
+
+None at the moment
