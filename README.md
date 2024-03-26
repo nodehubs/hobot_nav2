@@ -49,7 +49,7 @@ source /opt/tros/setup.bash
 
 # Set the environment variables for ROS
 source /opt/ros/foxy/setup.bash
-```# Launch OriginBot
+# Launch OriginBot
 ros2 launch originbot_base robot.launch.py
 ```
 
